@@ -131,5 +131,10 @@ RUN set -ex; \
 COPY *.sh upgrade.exclude /
 COPY config/* /usr/src/nextcloud/config/
 
+RUN sed -i 's/pm.max_children = 5/pm.max_children = 128/g' /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i 's/pm.start_servers = 2/pm.start_servers = 32/g' /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i 's/pm.min_spare_servers = 1/pm.min_spare_servers = 32/g' /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i 's/pm.max_spare_servers = 3/pm.max_spare_servers = 96/g' /usr/local/etc/php-fpm.d/www.conf
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
